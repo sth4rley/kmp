@@ -1,54 +1,64 @@
 #include <bits/stdc++.h>
+#include <cstring>
 
 using namespace std;
 
 class KMP {
-    string P;      // Padrao
-    vector<int> b; // tabela de back-tracking
-    int m; 
+    string Pattern;        // padrao
+    vector<int> backtrack; // tabela de back-tracking
 
-    public:
-    KMP(const char *_P) : P(_P) {
-        m = P.size();
-        b.assign(m+1, -1);
-        for (int i = 0, j=-1; i<m;) {
-           while(j>=0  and P[i] != P[j]) j = b[j];
-           b[++i] = ++j;
+  public:
+    // construtor
+    KMP(const char *_Pattern) : Pattern(_Pattern) {
+        backtrack.assign(Pattern.size() + 1, -1);
+
+        int i = 0;
+        int j = -1;
+
+        while (i < Pattern.size()) {
+            while (j >= 0 and Pattern[i] != Pattern[j])
+                j = backtrack[j];
+            backtrack[++i] = ++j;
         }
     }
 
-    vector<int> match (const char * T) {
+    // metodo responsavel por encontrar todas as ocorrencias
+    // de um padrao em uma string
+    vector<int> match(const char *T) {
         vector<int> ans;
 
-        for(int i = 0, j = 0, n = strlen(T); i<n;) {
-            while( j >= 0 and T[i] != P[j]) j = b[j];
+        int i = 0;
+        int j = 0;
+        int n = strlen(T);
+
+        // percorre a string
+        while (i < n) {
+            while (j >= 0 and T[i] != Pattern[j])
+                j = backtrack[j];
             i++;
             j++;
 
-            if (j==m) {
-                ans.push_back(i-j);
-                j = b[j];
+            if (j == Pattern.size()) {
+                ans.push_back(i - j);
+                j = backtrack[j];
             }
         }
 
         return ans;
     }
-
 };
 
-int main () {
+int main() {
     KMP kmp("banana");
 
-  const char *text = "banananasadhuashduashduasbananahduahdjkahdkuhbanana";
+    const char *text = "banananasadhuashduashduasbananahduahdjkahdkuhbanana";
 
     vector<int> occurrences = kmp.match(text);
 
     cout << "Qnt Ocorrencias: " << occurrences.size() << endl;
 
-    for(auto &x: occurrences) {
+    for (auto &x : occurrences) {
         cout << x << " ";
     }
     cout << endl;
 }
-
-
