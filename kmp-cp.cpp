@@ -2,25 +2,22 @@
 
 using namespace std;
 
-vector<int> ibtt(string p) {
-    int n = p.size();
-    vector<int> t(n + 1, -1);
-    int i = 0, j = -1;
-    while (i < n) {
-        while (j >= 0 and p[i] != p[j]) j = t[j];
-        t[++i] = ++j;
-    }
-    return t;
-}
-
 vector<int> match(string p, string t) {
-    vector<int> oc, btt = ibtt(p);
-    int i = 0, j = 0;
+    vector<int> btt(p.size() + 1, -1), oc;
+	
+    int i = 0, j = -1;
+    while (i < p.size()) {
+        while (j >= 0 and p[i] != p[j]) j = btt[j];
+        btt[++i] = ++j;
+    }
+
+    i = 0, j = 0;
     while (i < t.size()) {
         while (j >= 0 and t[i] != p[j]) j = btt[j];
         i++; j++;
         if (j == p.size()) oc.push_back(i - j), j = btt[j];
     }
+
     return oc;
 }
 
