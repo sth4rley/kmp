@@ -1,39 +1,40 @@
-#include <bits/stdc++.h>
-#include <cstring>
+#include <iostream>
+#include <string>
+#include <vector>
 
 using namespace std;
 
 class KMP {
-    string Pattern;        // padrao
+    string Pattern;        // padrão
     vector<int> backtrack; // tabela de back-tracking
 
   public:
     // construtor
-    KMP(const char *_Pattern) : Pattern(_Pattern) {
+    KMP(const string &pattern) : Pattern(pattern) {
         backtrack.assign(Pattern.size() + 1, -1);
 
         int i = 0;
         int j = -1;
 
         while (i < Pattern.size()) {
-            while (j >= 0 and Pattern[i] != Pattern[j])
+            while (j >= 0 && Pattern[i] != Pattern[j])
                 j = backtrack[j];
             backtrack[++i] = ++j;
         }
     }
 
-    // metodo responsavel por encontrar todas as ocorrencias
-    // de um padrao em uma string
-    vector<int> match(const char *T) {
+    // método responsável por encontrar todas as ocorrências
+    // de um padrão em uma string
+    vector<int> match(const string &text) {
         vector<int> ans;
 
         int i = 0;
         int j = 0;
-        int n = strlen(T);
+        int n = text.size();
 
         // percorre a string
         while (i < n) {
-            while (j >= 0 and T[i] != Pattern[j])
+            while (j >= 0 && text[i] != Pattern[j])
                 j = backtrack[j];
             i++;
             j++;
@@ -51,11 +52,11 @@ class KMP {
 int main() {
     KMP kmp("banana");
 
-    const char *text = "banananasadhuashduashduasbananahduahdjkahdkuhbanana";
+    string text = "banananasadhuashduashduasbananahduahdjkahdkuhbanana";
 
     vector<int> occurrences = kmp.match(text);
 
-    cout << "Qnt Ocorrencias: " << occurrences.size() << endl;
+    cout << "Quantidade de Ocorrências: " << occurrences.size() << endl;
 
     for (auto &x : occurrences) {
         cout << x << " ";
